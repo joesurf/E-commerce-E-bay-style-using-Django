@@ -1,0 +1,93 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Listing: {{ listing.item }}</h2>
+
+    <form action="{% url 'listing' listing.id %}" method="POST">
+        {% csrf_token %}
+        <input type="text" name="user" value="{{ user.id }}" hidden>
+        <input type="text" name="form_id" value="3" hidden>
+        {% if user.is_authenticated %}
+            {% if user in watched %}
+                <a style="border: 1px solid blue;" href="{% url 'watchlist' user.username %}">Watchlist</a>
+            {% else %}
+                <input type="submit" value="Add to Watchlist">
+            {% endif %}
+        {% endif %}
+    </form>
+
+    <form action="{% url 'listing' listing.id %}" method="POST">
+        {% csrf_token %}
+        <input type="text" name="user" value="{{ user.id }}" hidden>
+        <input type="text" name="form_id" value="4" hidden>
+        {% if user.is_authenticated %}
+            {% if user in watched %}
+                <input type="submit" value="Remove from Watchlist">
+            {% endif %}
+        {% endif %}
+    </form>
+
+    <img src="{{ listing.picture }}" alt="" width="300" height="200">
+    <p>{{ listing.description }}</p>
+
+    {% if listing.available %}
+
+        <p>Price: ${{ listing.price }}</p>
+        <p>{{ num_bids }} bid(s) so far.</p>
+        <form action="{% url 'listing' listing.id %}" method="POST">
+            {% csrf_token %}
+            <input type="text" name="user" value="{{ user.id }}" hidden>
+            <input type="text" name="form_id" value="1" hidden>
+            {% if user.is_authenticated %}
+                {% if user == listing.creator %}
+                    <input type="submit" value="Close Listing">
+                {% else %}
+                    <input type="number" name="bid_amt" placeholder="Bid" min="{{ max_bid }}">
+                    <input type="submit" value="Place Bid">
+                {% endif %}
+            {% else %}
+                <input type="text" name="bid_amt" placeholder="Sign in to Bid">
+            {% endif %}
+
+        </form>
+
+    {% else %}
+
+        <p>Closed Price: ${{ max_bid }}</p>
+        <p>Winner: {{ winner }}</p>
+
+    {% endif %}
+
+    <h3>Details</h3>
+    <ul>
+        <li>Listed by {{ listing.creator }}</li>
+    </ul>
+
+    <h3>Comments</h3>
+
+    <ul class="main">
+        {% for comment in comments %}
+            <li class="row">
+                <p>{{ comment.publisher }}</p>
+                <p>{{ comment.message }}</p>
+            </li>
+        {% empty %}
+            <li>None.</li>
+        {% endfor %}
+
+        <form action="{% url 'listing' listing.id %}" method="POST">
+            {% csrf_token %}
+            <input type="text" name="user" value="{{ user.id }}" hidden>
+            <input type="text" name="form_id" value="2" hidden>
+            {% if user.is_authenticated %}
+                <input type="text" name="messagebox" placeholder="Message..." required>
+                <input type="submit" value="Post">
+            {% else %}
+                <input type="text" name="messagebox" placeholder="Sign in to Comment">
+            {% endif %}
+        </form>
+    </ul>
+
+
+
+{% endblock %} 

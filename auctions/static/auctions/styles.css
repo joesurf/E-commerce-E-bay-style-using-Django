@@ -1,0 +1,25 @@
+body {
+    padding: 10px;
+}
+
+.main {
+    margin: 10px 5vh;
+    display: flex;
+    justify-content: space_between;
+}
+
+.main .row {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    margin: 5px 0px;
+    padding: 5px 5px;
+}
+
+.main .row .column1 {
+    width: 30%;
+}
+
+.main .row .column2 {
+    width: 70%;
+}

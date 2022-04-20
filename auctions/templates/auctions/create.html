@@ -1,0 +1,39 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Create New Listing</h2>
+
+    <form action="{% url 'create' %}" enctype="multipart/form-data" method="POST">
+        {% csrf_token %}
+        <div class="main">
+            <div class="row">
+                <label for="Title">Title: </label>
+                <input type="text" name="Title" id="Title" required>
+            </div>
+            <div class="row">
+                <label for="Description">Description:</label>
+                <input type="text" name="Description" id="Description" required>
+            </div>
+            <div class="row">
+                <label for="Starting Bid">Starting Bid:</label>
+                <input type="text" name="Price" id="Starting Bid" required>
+            </div>
+            <div class="row">
+                <label for="Date & Time">Date & Time: </label>
+                <input type="datetime" name="DateTime" id="Date & Time" placeholder="YYYY-MM-DD HH:MM[:ss[.uuuuuu]][TZ]" required>
+            </div>
+            <div class="row">
+                <label for="img">Select image:</label>
+                <input type="file" id="img" name="img" accept="images/*">
+            </div>
+            {% if user.is_authenticated %}
+                <input type="text" name="creator" value="{{ user.id }}" hidden>
+                <input type="submit" value="Create">
+            {% else %}
+                <p>Sign in to create listing</p>
+            {% endif %}
+
+        </div>
+
+    </form>
+{% endblock %} 
